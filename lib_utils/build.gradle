@@ -1,0 +1,90 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
+apply plugin: 'maven'
+
+android {
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+//        versionCode rootProject.ext.lib_gif.versionCode
+//        versionName rootProject.ext.lib_gif.versionName
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = rootProject.ext.android.dir
+        }
+    }
+
+    packagingOptions {
+        exclude "assets/*"
+        exclude "assets/**"
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+repositories {
+    flatDir {
+        dirs {
+            return rootProject.ext.android.dir
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation rootProject.ext.dependencies.support_v7_appcompat
+    implementation rootProject.ext.dependencies.support_design
+    implementation rootProject.ext.dependencies.support_multidex
+}
+
+//task makeJar(type: Jar) {
+//    from zipTree(file('build/intermediates/bundles/release/classes.jar'))
+//    from fileTree(dir: 'src/main', includes: ['assets*'])
+//    baseName = "AGSpeech"
+//    destinationDir = file(rootProject.ext.releaseDirsPath + '/thridpart/package/speech')
+//    exclude('android/', 'BuildConfig.class', 'R.class')
+//    exclude {
+//        it.name.startsWith('R$')
+//    }
+//}
+
+//makeJar.dependsOn(build)
+//
+//task copyAAR(type: Copy) {
+//    from 'build/outputs/aar/AGSpeechLib-release.aar'
+//    into rootProject.ext.releaseDirsPath + '/thridpart/package/speech'
+//    rename { String fileName ->
+//        fileName = "${rootProject.ext.speech.name}-${rootProject.ext.speech.versionName}.aar"
+//    }
+//}
+//uploadArchives {
+//    configuration = configurations.archives
+//    repositories {
+//        mavenDeployer {
+//            repository(url: rootProject.ext.maven.maven_repo_release_url) {
+//                authentication(userName: rootProject.ext.maven.nexus_username, password: rootProject.ext.maven.nexus_password)
+//            }
+//            pom.project {
+//                version rootProject.ext.speech.versionName //版本名称
+//                artifactId rootProject.ext.speech.nameLowerCase  //和前面网站上填写的一样
+//                groupId rootProject.ext.maven.groups_lib //和前面网站上填写的一样
+//                packaging 'aar' //填写aar
+//                description '搞一波gradle仓库: speech 有更新了' //更新描述
+//            }
+//        }
+//    }
+//}

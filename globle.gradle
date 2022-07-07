@@ -1,0 +1,65 @@
+ext{
+    supportLibraryVersion='28.0.3'
+    android=[
+        compileSdkVersion: 30,
+        buildToolsVersion: '30.0.3',
+        applicationId    : 'cn.com.agree.sdk.runtime',
+        minSdkVersion    : 19,
+        targetSdkVersion : 30,
+        versionCode      : 1,
+        versionName      : '1.0.0',
+        dir:getSdkPath(),
+        multiDexEnabled  : true
+    ]
+    /* 依赖包管理 */
+    dependencies = ['support_v7_appcompat'   : "com.android.support:appcompat-v7:$supportLibraryVersion",
+                    'support_v4'             : "com.android.support:support-v4:$supportLibraryVersion",
+                    'support_design'         : "com.android.support:design:$supportLibraryVersion",
+                    'support_annotations'    : "com.android.support:support-annotations:$supportLibraryVersion",
+                    'support_v7_recyclerview': "com.android.support:recyclerview-v7:$supportLibraryVersion",
+                    'support_multidex'       : "com.android.support:multidex:1.0.2",
+                    'stetho'                 : "com.facebook.stetho:stetho:1.5.0",
+                    'libCircleImageView'     : "de.hdodenhof:circleimageview:2.1.0",
+                    'fastjson'               : "com.alibaba:fastjson:1.1.46.android",
+                    'eventbus'               : "org.greenrobot:eventbus:3.1.1",
+                    'mqtt3'                  : 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.0',
+                    'mqtt3service'           : 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1',
+                    'database_sqlcipher'     : 'net.zetetic:android-database-sqlcipher:4.1.3',
+            ]
+}
+
+public List getSdkPath() {
+    //获取依赖根目录 projectDir.path获取实际位置+上级目录
+    def path = projectDir.path + '/lib/';
+    File file = new File(path);
+    if (!file.exists()) {
+        return ['libs']
+    }
+    //获取次级目录包名
+    def fileList = file.list();
+    //拼接次级目录
+    for (def i = 0; i < fileList.length; i++) {
+        fileList[i] = '../lib_sdk//' + fileList[i];
+    }
+    return fileList
+}
+
+public List getCoreSDKPath() {
+    //获取依赖包本地位置
+    def pathList = getSdkPath()
+    def filePathList=new ArrayList();
+
+    //获取本地依赖包的最低一层实际目录
+    for (def i = 0; i < pathList.size(); i++) {
+        File file = new File(projectDir.path+pathList[i].substring(2,pathList[i].length()));
+        if (!file.exists()) {
+            continue;
+        }
+        def fileList = file.list();
+        //从每一个最低一层目录下读取，aar名称
+        for (def j = 0; j < fileList.length; j++) {
+            filePathList.add(fileList[j].substring(0, fileList[j].length() - 4))
+        }
+    }
+    return filePathList
+}
