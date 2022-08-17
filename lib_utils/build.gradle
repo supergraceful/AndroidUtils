@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 apply plugin: 'maven'
+apply plugin:'com.github.dcendents.android-maven'
 
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
@@ -46,11 +47,31 @@ repositories {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation rootProject.ext.dependencies.support_v7_appcompat
-    implementation rootProject.ext.dependencies.support_design
-    implementation rootProject.ext.dependencies.support_multidex
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a Maven publication called "release".
+            mavenJava(MavenPublication) {
+//            release(MavenPublication) {
+                // Applies the component for the release build variant.
+                from components.release
 
+                // You can then customize attributes of the publication as shown below.
+                groupId = 'com.github.supergraceful'
+                artifactId = 'androidUtil'
+                version = '1.0.0'
+            }
+
+        }
+    }
+}
 //task makeJar(type: Jar) {
 //    from zipTree(file('build/intermediates/bundles/release/classes.jar'))
 //    from fileTree(dir: 'src/main', includes: ['assets*'])

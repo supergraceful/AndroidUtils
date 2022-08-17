@@ -1,7 +1,7 @@
 ext{
     supportLibraryVersion='28.0.3'
     android=[
-        compileSdkVersion: 30,
+        compileSdkVersion: 31,
         buildToolsVersion: '30.0.3',
         applicationId    : 'cn.com.agree.sdk.runtime',
         minSdkVersion    : 19,
